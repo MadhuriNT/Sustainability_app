@@ -285,7 +285,8 @@ if page == "🏠 Home & AI Chat":
         ]
         cols_chip = st.columns(3)
         for i, chip in enumerate(chips):
-            if cols_chip[i % 3].button(chip[:35] + "…", key=f"chip_{i}", width=True):
+                if cols_chip[i % 3].button(chip[:35] + "…", key=f"chip_{i}", use_container_width=True):
+            #if cols_chip[i % 3].button(chip[:35] + "…", key=f"chip_{i}", width=True):
                 st.session_state.messages.append({"role": "user", "content": chip})
                 with st.spinner("AI is thinking…"):
                     
