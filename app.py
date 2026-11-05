@@ -1,3 +1,5 @@
+from urllib import response
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -5,6 +7,31 @@ import plotly.express as px
 import plotly.graph_objects as go
 import requests
 import json
+
+def get_ai_response(chat_history):
+
+    url = "http://localhost:5678/webhook/3be5f2b8-7f95-4964-b9c1-88c0798a75b8"
+
+    latest_question = chat_history[-1]["content"]
+
+    payload = {
+        "question": latest_question
+    }
+
+    response = requests.post(
+        url,
+        json=payload,
+        timeout=120
+    )
+
+    response.raise_for_status()
+
+    data = response.json()
+
+    return data["answer"]
+
+
+
 
 # ─────────────────────────────────────────────────────────────
 # PAGE CONFIG
@@ -258,25 +285,32 @@ if page == "🏠 Home & AI Chat":
         ]
         cols_chip = st.columns(3)
         for i, chip in enumerate(chips):
-            if cols_chip[i % 3].button(chip[:35] + "…", key=f"chip_{i}", use_container_width=True):
+            if cols_chip[i % 3].button(chip[:35] + "…", key=f"chip_{i}", width=True):
                 st.session_state.messages.append({"role": "user", "content": chip})
                 with st.spinner("AI is thinking…"):
+                    
                     try:
-                        resp = requests.post(
-                            "https://api.anthropic.com/v1/messages",
-                            headers={"Content-Type": "application/json"},
-                            json={
-                                "model": "claude-sonnet-4-6",
-                                "max_tokens": 1000,
-                                "system": "You are a helpful AI guide for international students at German universities studying sustainability. Give clear, practical, friendly answers. Focus on: German university life, sustainability careers, part-time work rules (120 full days/yr limit), visa info, climate topics. Keep answers concise but complete. Use bullet points for clarity.",
-                                "messages": [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
-                            },
-                            timeout=30
-                        )
-                        data = resp.json()
-                        reply = data["content"][0]["text"]
+                        reply = get_ai_response(st.session_state.messages)
+
                     except Exception as e:
                         reply = f"Sorry, I couldn't connect to the AI right now. Error: {str(e)}"
+
+                    #try:
+                        #resp = requests.post(
+                           # "https://api.anthropic.com/v1/messages",
+                            #headers={"Content-Type": "application/json"},
+                            #json={
+                               # "model": "claude-sonnet-4-6",
+                                #"max_tokens": 1000,
+                                #"system": "You are a helpful AI guide for international students at German universities studying sustainability. Give clear, practical, friendly answers. Focus on: German university life, sustainability careers, part-time work rules (120 full days/yr limit), visa info, climate topics. Keep answers concise but complete. Use bullet points for clarity.",
+                                #"messages": [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+                           # },
+                            #timeout=30
+                        #)
+                        #data = resp.json()
+                        #reply = data["content"][0]["text"]
+                    #except Exception as e:
+                        #reply = f"Sorry, I couldn't connect to the AI right now. Error: {str(e)}"
                     st.session_state.messages.append({"role": "assistant", "content": reply})
                 st.rerun()
 
@@ -285,22 +319,29 @@ if page == "🏠 Home & AI Chat":
         if user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
             with st.spinner("AI is thinking…"):
+                
                 try:
-                    resp = requests.post(
-                        "https://api.anthropic.com/v1/messages",
-                        headers={"Content-Type": "application/json"},
-                        json={
-                            "model": "claude-sonnet-4-6",
-                            "max_tokens": 1000,
-                            "system": "You are a helpful AI guide for international students at German universities studying sustainability. Give clear, practical, friendly answers. Focus on: German university life, sustainability careers, part-time work rules (120 full days/yr limit), visa info, climate topics. Keep answers concise but complete. Use bullet points for clarity.",
-                            "messages": [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
-                        },
-                        timeout=30
-                    )
-                    data = resp.json()
-                    reply = data["content"][0]["text"]
+                    reply = get_ai_response(st.session_state.messages)
+
                 except Exception as e:
-                    reply = f"Sorry, I couldn't connect right now. Please try again."
+                    reply = f"Sorry, I couldn't connect right now. Error: {str(e)}"
+
+                #try:
+                    #resp = requests.post(
+                     #   "https://api.anthropic.com/v1/messages",
+                      #  headers={"Content-Type": "application/json"},
+                       # json={
+                        #    "model": "claude-sonnet-4-6",
+                         #   "max_tokens": 1000,
+                          #  "system": "You are a helpful AI guide for international students at German universities studying sustainability. Give clear, practical, friendly answers. Focus on: German university life, sustainability careers, part-time work rules (120 full days/yr limit), visa info, climate topics. Keep answers concise but complete. Use bullet points for clarity.",
+                           # "messages": [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+                        #},
+                        #timeout=30
+                    #)
+                    #data = resp.json()
+                    #reply = data["content"][0]["text"]
+                #except Exception as e:
+                    #reply = f"Sorry, I couldn't connect right now. Please try again."
                 st.session_state.messages.append({"role": "assistant", "content": reply})
             st.rerun()
 
