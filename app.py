@@ -721,21 +721,36 @@ elif page == "⚡ Green Energy":
     coal    = [55,54,52,50,48,46,45,44,43,43,41,40,39,38,36,34,32,30,26,24,20,18,15,12,10,8]
     nuclear = [30,29,29,28,27,27,27,26,26,26,24,17,16,16,15,14,14,13,13,12,11,6,6,6,0,0]
 
+    
     fig_e = go.Figure()
-    for name, data, color in [
-        ("Solar", solar, "#EF9F27"),
-        ("Wind", wind, "#378ADD"),
-        ("Coal", coal, "#888780"),
-        ("Nuclear", nuclear, "#E24B4A"),
+
+    for name, data, color, fill_color in [
+        ("Solar", solar, "#EF9F27", "rgba(239,159,39,0.13)"),
+        ("Wind", wind, "#378ADD", "rgba(55,138,221,0.13)"),
+        ("Coal", coal, "#888780", None),
+        ("Nuclear", nuclear, "#E24B4A", None),
     ]:
-        fig_e.add_trace(go.Scatter(x=energy_years, y=data, name=name,
-                                   line=dict(color=color, width=2.5),
-                                   mode="lines", fill="tozeroy" if name in ["Solar","Wind"] else None,
-                                   fillcolor=f"{color}22" if name in ["Solar","Wind"] else None))
-    fig_e.update_layout(template="plotly_dark", paper_bgcolor=BG, plot_bgcolor=BG,
-                        title="Germany electricity generation share (%) 2000–2025",
-                        height=400, margin=dict(l=10,r=10,t=40,b=30))
+        fig_e.add_trace(go.Scatter(
+            x=energy_years,
+            y=data,
+            name=name,
+            line=dict(color=color, width=2.5),
+            mode="lines",
+            fill="tozeroy" if fill_color else None,
+            fillcolor=fill_color
+        ))
+
+    fig_e.update_layout(
+        template="plotly_dark",
+        paper_bgcolor=BG,
+        plot_bgcolor=BG,
+        title="Germany electricity generation share (%) 2000–2025",
+        height=400,
+        margin=dict(l=10, r=10, t=40, b=30)
+    )
+
     st.plotly_chart(fig_e, use_container_width=True)
+
 
     st.markdown('<div class="section-header">Key milestones — Energiewende</div>', unsafe_allow_html=True)
     milestones = [
