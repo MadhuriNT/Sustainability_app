@@ -11,7 +11,8 @@ import json
 
 def get_ai_response(chat_history):
 
-    url = "https://defend-academy-parameters-region.trycloudflare.com/webhook/3be5f2b8-7f95-4964-b9c1-88c0798a75b8"
+    
+    url="https://variations-mod-viewing-almost.trycloudflare.com/webhook/3be5f2b8-7f95-4964-b9c1-88c0798a75b8"
 
     latest_question = chat_history[-1]["content"]
 
@@ -338,7 +339,7 @@ if page == "🏠 Home & AI Chat":
         st.markdown('<div class="section-header">📊 Quick Stats</div>', unsafe_allow_html=True)
         stats = [
             ("€12.41/hr", "Minimum wage Germany (2024)"),
-            ("120 days", "Max part-time work/year for students"),
+            ("140 days", "Max part-time work/year for students"),
             ("3,400+", "Open sustainability jobs in Germany"),
             ("47", "Universities offering sustainability degrees"),
             ("€850–1,200", "Average student cost of living/month"),
