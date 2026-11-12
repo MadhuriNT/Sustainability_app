@@ -10,10 +10,9 @@ import json
 
 
 def get_ai_response(chat_history):
-
     
-    url = "https://camps-tent-sophisticated-claims.trycloudflare.com/webhook/3be5f2b8-7f95-4964-b9c1-88c0798a75b8"
-
+    url = "https://concluded-tribes-examination-glow.trycloudflare.com/webhook/3be5f2b8-7f95-4964-b9c1-88c0798a75b8"
+    
     latest_question = chat_history[-1]["content"]
 
     payload = {
