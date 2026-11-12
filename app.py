@@ -12,7 +12,7 @@ import json
 def get_ai_response(chat_history):
 
     
-    url= "https://sensitive-east-citizen-alias.trycloudflare.com/webhook/3be5f2b8-7f95-4964-b9c1-88c0798a75b8"
+    url= "https://sealed-advisor-wine-pastor.trycloudflare.com/webhook/3be5f2b8-7f95-4964-b9c1-88c0798a75b8"
 
     latest_question = chat_history[-1]["content"]
 
